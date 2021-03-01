@@ -1,4 +1,5 @@
 from flask import Flask, request, abort
+from use_model import myPredict, lamda_l
 import requests
 import json
 app = Flask(__name__)
@@ -10,9 +11,10 @@ def webhook():
     Reply_token = payload['events'][0]['replyToken']
     print(Reply_token)
     message = payload['events'][0]['message']['text']
-    print(message)
-    if 'ดี' in message :
-      Reply_messasge = 'ดีมาก'
+    # print(message)
+    if message :
+      Reply_messasge = myPredict(message)
+      print(Reply_messasge)
       ReplyMessage(Reply_token,Reply_messasge)
       return request.json, 200
   else:
