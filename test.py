@@ -30,7 +30,7 @@ def callback():
 
 def sendText(user, text):
   LINE_API = 'https://api.line.me/v2/bot/message/reply'
-  Authorization = 'Bearer ENTER_ACCESS_TOKEN' # ใส่ ENTER_ACCESS_TOKEN เข้าไป
+  Authorization = 'CxoEeTecHEIzApUgMPohAgQALqbSi/i0xq0Qx16YGDjwyqSXUXbtbul7oA8t1EiF6Ti+ylCs3JRmMLhBAyWP3l8r8KoCrPymAt4F+6j0AqO5Dg7ArwsY0YRgN+trYbjUyvbPqywXerDtCBGIbOAd/AdB04t89/1O/w1cDnyilFU=' # ใส่ ENTER_ACCESS_TOKEN เข้าไป
   headers = {
   'Content-Type': 'application/json; charset=UTF-8',
   'Authorization':Authorization
