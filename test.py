@@ -31,10 +31,24 @@ def ReplyMessage(Reply_token, TextMessage):
   }
   data = {
     "replyToken":Reply_token,
-    "messages":[{
-      "type":"text",
-      "text":TextMessage
-    }]
+    "messages":[
+      {
+        "type":"text",
+        "text":TextMessage,
+        "quickReply": {
+          "items": [
+            {
+              "type": "action",
+              "action": {
+                "type": "message",
+                "label": "สวัสดี",
+                "text": "Hello World!"
+              }
+            }
+          ]
+        }
+      }
+    ]
   }
   data = json.dumps(data)
   r = requests.post(LINE_API, headers=headers, data=data)
