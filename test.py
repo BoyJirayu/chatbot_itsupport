@@ -13,8 +13,37 @@ def webhook():
     message = payload['events'][0]['message']['text']
     # print(message)
     if message :
-      Reply_messasge = myPredict(message)
-      print(Reply_messasge)
+      Label_messasge = myPredict(message)
+      if Label_messasge == "ทักทาย" :
+        Reply_messasge = "สวัสดีครับ IT Support ยินดีให้บริการครับ"
+      elif Label_messasge == "เสร็จสิ้นและขอบคุณ" :
+        Reply_messasge = "IT Support ยินดีให้บริการครับ ขอบคุณครับ"
+      elif Label_messasge == "Video Conference" :
+        Reply_messasge = "ถ้าท่านต้องการใช้งานระบบ Video Conference"+"\n"+"โปรดแจ้งรายละเอียด ดังนี้"+"\n"+"ชื่อการประชุม วันที่ เวลา และต้องการอุปกรณ์สำหรับประชุม Video Conference หรือไม่"
+      elif Label_messasge == "ระบบ E-Budget" :
+        Reply_messasge = "Test"
+      elif Label_messasge == "ระบบ VPN" :
+        Reply_messasge = "Test"
+      elif Label_messasge == "ระบบ ERP" :
+        Reply_messasge = "Test"
+      elif Label_messasge == "Share Drive" :
+        Reply_messasge = "Test"
+      elif Label_messasge == "Back Office System" :
+        Reply_messasge = "Test"
+      elif Label_messasge == "Email" :
+        Reply_messasge = "Test"
+      elif Label_messasge == "Internet" :
+        Reply_messasge = "Test"
+      elif Label_messasge == "Network Security" :
+        Reply_messasge = "Test"
+      elif Label_messasge == "เครื่องแม่ข่าย VM & Server" :
+        Reply_messasge = "Test"
+      elif Label_messasge == "Printer & Scanner" :
+        Reply_messasge = "Test"
+      elif Label_messasge == "ปัญหา Computer" :
+        Reply_messasge = "Test"
+      elif Label_messasge == "ยืมคืน Accessory" :
+        Reply_messasge = "Test"
       ReplyMessage(Reply_token,Reply_messasge)
       return request.json, 200
   else:
