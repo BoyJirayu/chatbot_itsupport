@@ -23,15 +23,15 @@ def webhook():
       elif Label_messasge == "ระบบ E-Budget" :
         Reply_messasge = "Test"
       elif Label_messasge == "ระบบ VPN" :
-        Reply_messasge = "Test"
+        Reply_messasge = "ท่านสามารถใช้งานผ่าน Web Browser ได้ที่ลิงก์ https://vpn.mhesi.go.th/dana-na/auth/url_3/welcome.cgi
       elif Label_messasge == "ระบบ ERP" :
-        Reply_messasge = "Test"
+        Reply_messasge = "สามารถใช้ฃานได้ผ่าน https://erp.mhesi.go.th/"
       elif Label_messasge == "Share Drive" :
         Reply_messasge = "Test"
       elif Label_messasge == "Back Office System" :
         Reply_messasge = "Test"
       elif Label_messasge == "Email" :
-        Reply_messasge = "Test"
+        Reply_messasge = "สามารถใช้งานได้ที่ webmail.mhesi.go.th"
       elif Label_messasge == "Internet" :
         Reply_messasge = "Test"
       elif Label_messasge == "Network Security" :
@@ -39,7 +39,7 @@ def webhook():
       elif Label_messasge == "เครื่องแม่ข่าย VM & Server" :
         Reply_messasge = "Test"
       elif Label_messasge == "Printer & Scanner" :
-        Reply_messasge = "Test"
+        Reply_messasge = "รับทราบครับ เดี๋ยวเจ้าหน้าที่จะดำเนินการติดตั้งหรือแก้ปัญหาเครื่อง Printer/Scanner ของท่านให้ครับ"
       elif Label_messasge == "ปัญหา Computer" :
         Reply_messasge = "Test"
       elif Label_messasge == "ยืมคืน Accessory" :
