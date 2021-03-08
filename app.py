@@ -1,5 +1,8 @@
 from flask import Flask, request, abort
 from use_model import myPredict, lamda_l
+from firebase import firebase
+from connect_firebase
+
 import requests
 import json
 app = Flask(__name__)
