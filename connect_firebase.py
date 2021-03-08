@@ -5,14 +5,14 @@ cred = credentials.Certificate('line-itsupport-firebase-firebase-adminsdk-fvrmd-
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-## Write Data to Firebase
-# doc_ref = db.collection(u'users').document(u'aturing')
+# # Write Data to Firebase
+# doc_ref = db.collection(u'users').document(u'Name')
 # doc_ref.set({
-#     u'first': u'Alan',
-#     u'last': u'Turing',
+#     u'first': u'Jirayu',
+#     u'last': u'Chaimeeboon',
 # })
 
-## Read Data from Firebase
+# # Read Data from Firebase
 # users_ref = db.collection(u'users')
 # docs = users_ref.stream()
 
