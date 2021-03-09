@@ -47,11 +47,11 @@ def event_handle(event):
     if msgType == "text":
       message = str(event["message"]["text"])
 
-      Reply_message = "สวัสดีครับ K'"+user_name+" IT Support ยินดีให้บริการครับ"
+      Reply_message = "สวัสดีครับ K'" + user_name +"\n" + " IT Support ยินดีให้บริการครับ"
       # if message :
       #   Label_message = myPredict(message)
       #   if Label_message == "ทักทาย" :
-      #     Reply_message = "สวัสดีครับ K'"+user_name+" IT Support ยินดีให้บริการครับ"
+      #     Reply_message = "สวัสดีครับ K'" + user_name +"\n" + " IT Support ยินดีให้บริการครับ"
       #   elif Label_message == "เสร็จสิ้นและขอบคุณ" :
       #     Reply_message = "IT Support ยินดีให้บริการครับ ขอบคุณครับ"
       #   elif Label_message == "Video Conference" :
