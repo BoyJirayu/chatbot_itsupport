@@ -1,90 +1,93 @@
-from flask import Flask, request, abort
-from use_model import myPredict, lamda_l
-from firebase import firebase
-from connect_firebase
+from flask import Flask, jsonify, render_template, request
+from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,ImageSendMessage, StickerSendMessage, AudioSendMessage
+from linebot.models.template import *
+from linebot import LineBotApi, WebhookHandler
+# from use_model import myPredict, lamda_l
+# from firebase import firebase
+# from connect_firebase import *
 
-import requests
 import json
+import numpy as np
+
 app = Flask(__name__)
-@app.route('/', methods=['POST','GET'])
 
-def webhook():
-  if request.method == 'POST':
-    payload = request.json
-    Reply_token = payload['events'][0]['replyToken']
-    print(Reply_token)
-    message = payload['events'][0]['message']['text']
-    # print(message)
-    if message :
-      Label_messasge = myPredict(message)
-      if Label_messasge == "ทักทาย" :
-        Reply_messasge = "สวัสดีครับ IT Support ยินดีให้บริการครับ"
-      elif Label_messasge == "เสร็จสิ้นและขอบคุณ" :
-        Reply_messasge = "IT Support ยินดีให้บริการครับ ขอบคุณครับ"
-      elif Label_messasge == "Video Conference" :
-        Reply_messasge = "ถ้าท่านต้องการใช้งานระบบ Video Conference"+"\n"+"โปรดแจ้งรายละเอียด ดังนี้"+"\n"+"ชื่อการประชุม วันที่ เวลา และต้องการอุปกรณ์สำหรับประชุม Video Conference หรือไม่"
-      elif Label_messasge == "ระบบ E-Budget" :
-        Reply_messasge = "Test"
-      elif Label_messasge == "ระบบ VPN" :
-        Reply_messasge = "ท่านสามารถใช้งานผ่าน Web Browser ได้ที่ลิงก์ https://vpn.mhesi.go.th/dana-na/auth/url_3/welcome.cgi"
-      elif Label_messasge == "ระบบ ERP" :
-        Reply_messasge = "สามารถใช้ฃานได้ผ่าน https://erp.mhesi.go.th/"
-      elif Label_messasge == "Share Drive" :
-        Reply_messasge = "Test"
-      elif Label_messasge == "Back Office System" :
-        Reply_messasge = "Test"
-      elif Label_messasge == "Email" :
-        Reply_messasge = "สามารถใช้งานได้ที่ webmail.mhesi.go.th"
-      elif Label_messasge == "Internet" :
-        Reply_messasge = "Test"
-      elif Label_messasge == "Network Security" :
-        Reply_messasge = "Test"
-      elif Label_messasge == "เครื่องแม่ข่าย VM & Server" :
-        Reply_messasge = "Test"
-      elif Label_messasge == "Printer & Scanner" :
-        Reply_messasge = "รับทราบครับ เดี๋ยวเจ้าหน้าที่จะดำเนินการติดตั้งหรือแก้ปัญหาเครื่อง Printer/Scanner ของท่านให้ครับ"
-      elif Label_messasge == "ปัญหา Computer" :
-        Reply_messasge = "Test"
-      elif Label_messasge == "ยืมคืน Accessory" :
-        Reply_messasge = "Test"
-      ReplyMessage(Reply_token,Reply_messasge)
-      return request.json, 200
-  else:
-    abort(400)
+lineaccesstoken = 'CxoEeTecHEIzApUgMPohAgQALqbSi/i0xq0Qx16YGDjwyqSXUXbtbul7oA8t1EiF6Ti+ylCs3JRmMLhBAyWP3l8r8KoCrPymAt4F+6j0AqO5Dg7ArwsY0YRgN+trYbjUyvbPqywXerDtCBGIbOAd/AdB04t89/1O/w1cDnyilFU='
+line_bot_api = LineBotApi(lineaccesstoken)
 
-def ReplyMessage(Reply_token, TextMessage):
-  LINE_API = 'https://api.line.me/v2/bot/message/reply'
+####################### new ########################
+@app.route('/')
+def index():
+    return "Hello World!"
 
-  Authorization = 'Bearer {}'.format('CxoEeTecHEIzApUgMPohAgQALqbSi/i0xq0Qx16YGDjwyqSXUXbtbul7oA8t1EiF6Ti+ylCs3JRmMLhBAyWP3l8r8KoCrPymAt4F+6j0AqO5Dg7ArwsY0YRgN+trYbjUyvbPqywXerDtCBGIbOAd/AdB04t89/1O/w1cDnyilFU=')
-  print(Authorization)
-  headers = {
-    'Content-Type': 'application/json; charset=UTF-8',
-    'Authorization':Authorization
-  }
-  data = {
-    "replyToken":Reply_token,
-    "messages":[
-      {
-        "type":"text",
-        "text":TextMessage,
-        "quickReply": {
-          "items": [
-            {
-              "type": "action",
-              "action": {
-                "type": "message",
-                "label": "สวัสดี",
-                "text": "Hello World!"
-              }
-            }
-          ]
-        }
-      }
-    ]
-  }
-  data = json.dumps(data)
-  r = requests.post(LINE_API, headers=headers, data=data)
-  return 200
+
+@app.route('/webhook', methods=['POST'])
+def callback():
+    json_line = request.get_json(force=False,cache=False)
+    json_line = json.dumps(json_line)
+    decoded = json.loads(json_line)
+    no_event = len(decoded['events'])
+    for i in range(no_event):
+        event = decoded['events'][i]
+        event_handle(event)
+    return '',200
+
+
+def event_handle(event):
+    print(event)
+
+    userID = event['source']['userId']
+    Reply_token = event['replyToken']
+    msgType = event["message"]["type"]
+
+    # User Profile
+    profile = line_bot_api.get_profile(userID)
+    user_name = profile.display_name
+    user_pic = profile.picture_url
+
+    if msgType == "text":
+      message = str(event["message"]["text"])
+
+      Reply_message = "สวัสดีครับ K'"+user_name+" IT Support ยินดีให้บริการครับ"
+      # if message :
+      #   Label_message = myPredict(message)
+      #   if Label_message == "ทักทาย" :
+      #     Reply_message = "สวัสดีครับ K'"+user_name+" IT Support ยินดีให้บริการครับ"
+      #   elif Label_message == "เสร็จสิ้นและขอบคุณ" :
+      #     Reply_message = "IT Support ยินดีให้บริการครับ ขอบคุณครับ"
+      #   elif Label_message == "Video Conference" :
+      #     Reply_message = "ถ้าท่านต้องการใช้งานระบบ Video Conference"+"\n"+"โปรดแจ้งรายละเอียด ดังนี้"+"\n"+"ชื่อการประชุม วันที่ เวลา และต้องการอุปกรณ์สำหรับประชุม Video Conference หรือไม่"
+      #   elif Label_message == "ระบบ E-Budget" :
+      #     Reply_message = "Test"
+      #   elif Label_message == "ระบบ VPN" :
+      #     Reply_message = "ท่านสามารถใช้งานผ่าน Web Browser ได้ที่ลิงก์ https://vpn.mhesi.go.th/dana-na/auth/url_3/welcome.cgi"
+      #   elif Label_message == "ระบบ ERP" :
+      #     Reply_message = "สามารถใช้ฃานได้ผ่าน https://erp.mhesi.go.th/"
+      #   elif Label_message == "Share Drive" :
+      #     Reply_message = "Test"
+      #   elif Label_message == "Back Office System" :
+      #     Reply_message = "Test"
+      #   elif Label_message == "Email" :
+      #     Reply_message = "สามารถใช้งานได้ที่ webmail.mhesi.go.th"
+      #   elif Label_message == "Internet" :
+      #     Reply_message = "Test"
+      #   elif Label_message == "Network Security" :
+      #     Reply_message = "Test"
+      #   elif Label_message == "เครื่องแม่ข่าย VM & Server" :
+      #     Reply_message = "Test"
+      #   elif Label_message == "Printer & Scanner" :
+      #     Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่จะดำเนินการติดตั้งหรือแก้ปัญหาเครื่อง Printer/Scanner ของท่านให้ครับ"
+      #   elif Label_message == "ปัญหา Computer" :
+      #     Reply_message = "Test"
+      #   elif Label_message == "ยืมคืน Accessory" :
+      #     Reply_message = "Test"
+
+      TextMessage = TextSendMessage(text=Reply_message)
+      Reply_object = TextMessage
+      line_bot_api.reply_message(Reply_token, Reply_object)
+
+    else:
+        Reply_object = StickerSendMessage(package_id=str(1),sticker_id=str(2))
+        line_bot_api.reply_message(Reply_token, Reply_object)
 
 if __name__ == '__main__':
-  app.run(debug=True)
+    app.run(debug=True)
