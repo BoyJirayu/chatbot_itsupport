@@ -1,11 +1,11 @@
 from flask import Flask, jsonify, render_template, request
-from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,ImageSendMessage, StickerSendMessage, AudioSendMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,ImageSendMessage,FlexSendMessage, StickerSendMessage, AudioSendMessage
 from linebot.models.template import *
 from linebot import LineBotApi, WebhookHandler
 from use_model import myPredict, lamda_l
 from firebase import firebase
 from connect_firebase import *
-from card_function import *
+from card_function import contact_card
 
 import json
 import numpy as np
@@ -53,9 +53,11 @@ def event_handle(event):
     # Verify Message for reply back
     if msgType == "text":
       message = str(event["message"]["text"])
-
+      
       if message == "รบกวนขอช่องทางการติดต่อ IT Support หน่อยครับ/ค่ะ" :
-        Reply_object = contact_card(user_name,user_pic)
+        flex = contact_card(name=user_name,pic=user_pic)
+        flex = json.loads(flex)
+        Reply_object = FlexSendMessage(alt_text='Flex Message',contents=flex)
         line_bot_api.reply_message(Reply_token, Reply_object)
 
       elif message :
