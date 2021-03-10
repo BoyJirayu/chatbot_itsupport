@@ -54,7 +54,7 @@ def event_handle(event):
     if msgType == "text":
       message = str(event["message"]["text"])
 
-      if message == "ช่องทางการติดต่อ IT Support" :
+      if message == "รบกวนขอช่องทางการติดต่อ IT Support หน่อยครับ/ค่ะ" :
         Reply_object = contact_card(user_name,user_pic)
         line_bot_api.reply_message(Reply_token, Reply_object)
 
