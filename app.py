@@ -5,6 +5,7 @@ from linebot import LineBotApi, WebhookHandler
 from use_model import myPredict, lamda_l
 from firebase import firebase
 from connect_firebase import *
+from card_function import *
 
 import json
 import numpy as np
@@ -21,7 +22,6 @@ line_bot_api = LineBotApi(lineaccesstoken)
 def index():
     return "Hello World!"
 
-
 @app.route('/webhook', methods=['POST'])
 def callback():
     json_line = request.get_json(force=False,cache=False)
@@ -32,7 +32,6 @@ def callback():
         event = decoded['events'][i]
         event_handle(event)
     return '',200
-
 
 def event_handle(event):
     print(event)
@@ -48,12 +47,18 @@ def event_handle(event):
     db_name = "User Profile"
     data = {"Display_Name": user_name, "Profile_Pic": user_pic}
 
+    # Add User Profile to DB
     post_user_pofile(uid=userID,data=data,firebase_app=firebase,db_name=db_name)
 
+    # Verify Message for reply back
     if msgType == "text":
       message = str(event["message"]["text"])
 
-      if message :
+      if message == "ช่องทางการติดต่อ IT Support" :
+        Reply_object = contact_card(user_name,user_pic)
+        line_bot_api.reply_message(Reply_token, Reply_object)
+
+      elif message :
         Label_message = myPredict(message)
         if Label_message == "ทักทาย" :
           Reply_message = "สวัสดีครับ K'" + user_name +"\n" + " IT Support ยินดีให้บริการครับ"
