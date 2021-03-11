@@ -1,3 +1,4 @@
+import requests
 def contact_card(name,pic):
   flex = '''
     {
@@ -131,3 +132,12 @@ def contact_card(name,pic):
       }
     }'''%(name,pic)
   return flex
+
+def line_notify(name) :
+  url = 'https://notify-api.line.me/api/notify'
+  token = '2ZQUYSP1cYGQMg2j3aPfHIepEO3PkHO4yiqJkaJaT1w'
+  headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
+
+  msg = 'คุณ'+name+' เรียกเจ้าหน้าที่ IT Support ที่ Line Official ครับ'
+  r = requests.post(url, headers=headers, data = {'message':msg})
+  print (r.text)

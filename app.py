@@ -5,7 +5,7 @@ from linebot import LineBotApi, WebhookHandler
 from use_model import myPredict, lamda_l
 from firebase import firebase
 from connect_firebase import *
-from card_function import contact_card
+from card_function import *
 
 import json
 import numpy as np
@@ -59,6 +59,10 @@ def event_handle(event):
         flex = json.loads(flex)
         Reply_object = FlexSendMessage(alt_text='Flex Message',contents=flex)
         line_bot_api.reply_message(Reply_token, Reply_object)
+      elif message == "กรุณาเรียกเจ้าหน้าที่ IT Support ให้หน่อยครับ/ค่ะ" :
+        line_notify(name=user_name)
+        Reply_object = TextSendMessage(text="ได้ดำเนินการเรียกเจ้าหน้าที่แล้ว กรุณารอสักครู่นะครับ")
+        line_bot_api.reply_message(Reply_token, Reply_object)
 
       elif message :
         Label_message = myPredict(message)
@@ -93,8 +97,7 @@ def event_handle(event):
         elif Label_message == "ยืมคืน Accessory" :
           Reply_message = "Test"
 
-        TextMessage = TextSendMessage(text=Reply_message)
-        Reply_object = TextMessage
+        Reply_object = TextSendMessage(text=Reply_message)
         line_bot_api.reply_message(Reply_token, Reply_object)
 
     else:
