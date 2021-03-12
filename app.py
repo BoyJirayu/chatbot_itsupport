@@ -73,29 +73,29 @@ def event_handle(event):
         elif Label_message == "Video Conference" :
           Reply_message = "ถ้าท่านต้องการใช้งานระบบ Video Conference"+"\n"+"โปรดแจ้งรายละเอียด ดังนี้"+"\n"+"ชื่อการประชุม วันที่ เวลา และต้องการอุปกรณ์สำหรับประชุม Video Conference หรือไม่"
         elif Label_message == "ระบบ E-Budget" :
-          Reply_message = "Test"
+          Reply_message = "http://budget.mhesi.go.th/"
         elif Label_message == "ระบบ VPN" :
           Reply_message = "ท่านสามารถใช้งานผ่าน Web Browser ได้ที่ลิงก์ https://vpn.mhesi.go.th/dana-na/auth/url_3/welcome.cgi"
         elif Label_message == "ระบบ ERP" :
-          Reply_message = "สามารถใช้ฃานได้ผ่าน https://erp.mhesi.go.th/"
+          Reply_message = "สามารถใช้งานได้ผ่าน https://erp.mhesi.go.th/"
         elif Label_message == "Share Drive" :
-          Reply_message = "Test"
+          Reply_message = "รบกวนตรวจสอบอินเทอร์เน็ตและ Reboot Computer 1 ครั้งครับ"
         elif Label_message == "Back Office System" :
-          Reply_message = "Test"
+          Reply_message = "เดี๋ยวเจ้าหน้าที่ตรวจสอบให้นะครับ สักครู่ครับ"
         elif Label_message == "Email" :
           Reply_message = "สามารถใช้งานได้ที่ webmail.mhesi.go.th"
         elif Label_message == "Internet" :
-          Reply_message = "Test"
+          Reply_message = "เจ้าหน้าที่ขออนุญาตตรวจสอบสักครู่ครับ ขอบคุณครับ"
         elif Label_message == "Network Security" :
-          Reply_message = "Test"
+          Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่ดำเนินการตรวจสอบให้ครับ"
         elif Label_message == "เครื่องแม่ข่าย VM & Server" :
-          Reply_message = "Test"
+          Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่ดำเนินการตรวจสอบให้ครับ"
         elif Label_message == "Printer & Scanner" :
           Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่จะดำเนินการติดตั้งหรือแก้ปัญหาเครื่อง Printer/Scanner ของท่านให้ครับ"
         elif Label_message == "ปัญหา Computer" :
           Reply_message = "Test"
         elif Label_message == "ยืมคืน Accessory" :
-          Reply_message = "Test"
+          Reply_message = "IT Support มีเครื่องคอมพิวเตอร์ Notebook สำหรับให้บริการชั่วคราวเพียงอย่างเดียวครับ"+"\n"+"หากท่านต้องการ โปรดแจ้งเราได้เลยครับ ว่าท่านต้องการกี่เครื่อง ใช้เพื่อวัตถุประสงค์อะไร ระยะเวลาในการยืม"
 
         Reply_object = TextSendMessage(text=Reply_message)
         line_bot_api.reply_message(Reply_token, Reply_object)
