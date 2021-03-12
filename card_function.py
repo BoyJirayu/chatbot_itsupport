@@ -14,17 +14,17 @@ def contact_card(name,pic):
             "weight": "bold",
             "align": "center",
             "gravity": "center",
-            "color": "#FFC500"
+            "color": "#2F4F4F"
           }
         ],
-        "backgroundColor": "#5A5A5A"
+        "backgroundColor": "#CCFFFF"
       },
       "hero": {
         "type": "image",
         "url": "%s",
         "size": "xxl",
         "aspectRatio": "20:13",
-        "aspectMode": "cover",
+        "aspectMode": "fit",
         "action": {
           "type": "uri",
           "uri": "http://linecorp.com/"
@@ -33,8 +33,7 @@ def contact_card(name,pic):
         "offsetBottom": "none",
         "offsetStart": "none",
         "offsetEnd": "none",
-        "margin": "none",
-        "backgroundColor": "#FFDF8A"
+        "margin": "none"
       },
       "body": {
         "type": "box",
@@ -48,7 +47,7 @@ def contact_card(name,pic):
             "margin": "none",
             "gravity": "center",
             "align": "center",
-            "color": "#FFC500"
+            "color": "#2F4F4F"
           },
           {
             "type": "box",
@@ -64,7 +63,7 @@ def contact_card(name,pic):
                   {
                     "type": "text",
                     "text": "Tel :",
-                    "color": "#FFFFFF",
+                    "color": "#2F4F4F",
                     "size": "sm",
                     "flex": 2
                   },
@@ -72,7 +71,7 @@ def contact_card(name,pic):
                     "type": "text",
                     "text": "02-333-3700 ต่อ 1111",
                     "wrap": true,
-                    "color": "#D5D5D5",
+                    "color": "#4682B4",
                     "size": "sm",
                     "flex": 5
                   }
@@ -86,7 +85,7 @@ def contact_card(name,pic):
                   {
                     "type": "text",
                     "text": "E-mail :",
-                    "color": "#FFFFFF",
+                    "color": "#2F4F4F",
                     "size": "sm",
                     "flex": 2
                   },
@@ -94,7 +93,7 @@ def contact_card(name,pic):
                     "type": "text",
                     "text": "it.support@mhesi.go.th",
                     "wrap": true,
-                    "color": "#D5D5D5",
+                    "color": "#4682B4",
                     "size": "sm",
                     "flex": 5
                   }
@@ -108,14 +107,14 @@ def contact_card(name,pic):
                     "type": "text",
                     "text": "Line :",
                     "flex": 2,
-                    "color": "#FFFFFF",
+                    "color": "#2F4F4F",
                     "size": "sm"
                   },
                   {
                     "type": "text",
                     "text": "@it-support",
                     "flex": 5,
-                    "color": "#D5D5D5",
+                    "color": "#4682B4",
                     "size": "sm"
                   }
                 ]
@@ -123,11 +122,11 @@ def contact_card(name,pic):
             ]
           }
         ],
-        "backgroundColor": "#5A5A5A"
+        "backgroundColor": "#CCFFFF"
       },
       "styles": {
         "hero": {
-          "backgroundColor": "#5A5A5A"
+          "backgroundColor": "#CCFFFF"
         }
       }
     }'''%(name,pic)
