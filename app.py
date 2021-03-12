@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, render_template, request
-from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,ImageSendMessage,FlexSendMessage, StickerSendMessage, AudioSendMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,ImageSendMessage,FlexSendMessage, StickerSendMessage, AudioSendMessage, QuickReply, QuickReplyButton, MessageAction
 from linebot.models.template import *
 from linebot import LineBotApi, WebhookHandler
 from use_model import myPredict, lamda_l
@@ -59,6 +59,15 @@ def event_handle(event):
         flex = json.loads(flex)
         Reply_object = FlexSendMessage(alt_text='Flex Message',contents=flex)
         line_bot_api.reply_message(Reply_token, Reply_object)
+      elif message == "ขอแจ้งปัญหาการใช้งานระบบ Back Office ครับ/ค่ะ" :
+        Reply_object = TextSendMessage(text='โปรดระบุระบบ Back Office ที่ท่านใช้งานครับ',quick_reply=QuickReply(items=[
+            QuickReplyButton(action=MessageAction(label="ระบบสารบรรณ", text="ระบบสารบรรณ")),
+            QuickReplyButton(action=MessageAction(label="ระบบใบลา", text="ระบบใบลา")),
+            QuickReplyButton(action=MessageAction(label="ระบบหนังสือเวียน", text="ระบบหนังสือเวียน")),
+            QuickReplyButton(action=MessageAction(label="ระบบ S-curve", text="ระบบ S-curve")),
+            QuickReplyButton(action=MessageAction(label="ระบบ DPIS", text="ระบบ DPIS")),
+          ]))
+        line_bot_api.reply_message(Reply_token, Reply_object)
       elif message == "กรุณาเรียกเจ้าหน้าที่ IT Support ให้หน่อยครับ/ค่ะ" :
         line_notify(name=user_name)
         Reply_object = TextSendMessage(text="ได้ดำเนินการเรียกเจ้าหน้าที่แล้ว กรุณารอสักครู่นะครับ")
@@ -93,9 +102,9 @@ def event_handle(event):
         elif Label_message == "Printer & Scanner" :
           Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่จะดำเนินการติดตั้งหรือแก้ปัญหาเครื่อง Printer/Scanner ของท่านให้ครับ"
         elif Label_message == "ปัญหา Computer" :
-          Reply_message = "Test"
+          Reply_message = "รับทราบครับ เจ้าหน้าที่ขออนุญาตตรวจสอบสักครู่ครับ"
         elif Label_message == "ยืมคืน Accessory" :
-          Reply_message = "IT Support มีเครื่องคอมพิวเตอร์ Notebook สำหรับให้บริการชั่วคราวเพียงอย่างเดียวครับ"+"\n"+"หากท่านต้องการ โปรดแจ้งเราได้เลยครับ ว่าท่านต้องการกี่เครื่อง ใช้เพื่อวัตถุประสงค์อะไร ระยะเวลาในการยืม"
+          Reply_message = "IT Support มีเครื่องคอมพิวเตอร์ Notebook สำหรับให้บริการชั่วคราวเพียงอย่างเดียวครับ"+"\n"+"สามารถแจ้งเราได้เลยครับ ว่าท่านต้องการกี่เครื่อง ใช้เพื่อวัตถุประสงค์อะไร ระยะเวลาในการยืม"
 
         Reply_object = TextSendMessage(text=Reply_message)
         line_bot_api.reply_message(Reply_token, Reply_object)
