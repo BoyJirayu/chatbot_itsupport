@@ -53,20 +53,30 @@ def event_handle(event):
 
     # Verify User Session
     user_session = get(uid=userID,firebase_app=firebase,db_name="User Session")
+    # create session for new user
+    if (user_session is None):
+      post_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+      user_session = get(uid=userID,firebase_app=firebase,db_name="User Session")
     user_session = user_session["Session"]
-    # post_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
 
     # Verify Message for reply back
-    if user_session == 0:
-      if msgType == "text":
-        message = str(event["message"]["text"])
-        
-        if match_menu(def_msg="ขอเบอร์หรือช่องทางการติดต่อ IT Support หน่อย",user_msg=message):
-          flex = contact_card(name=user_name,pic=user_pic)
-          flex = json.loads(flex)
-          Reply_object = FlexSendMessage(alt_text='Flex Message',contents=flex)
+    if msgType == "text":
+      message = str(event["message"]["text"])
+
+      if user_session == 0:  
+        if match_menu(def_msg="ขอแจ้งปัญหาการใช้งานด้าน IT ครับ",user_msg=message) :
+          Reply_object = TextSendMessage(text='โปรดระบุประเภทปัญหาที่ท่านใช้งานครับ',quick_reply=QuickReply(items=[
+              QuickReplyButton(action=MessageAction(label="VPN", text="ปัญหาการใช้งาน VPN")),
+              QuickReplyButton(action=MessageAction(label="Share Drive", text="Share Drive")),
+              QuickReplyButton(action=MessageAction(label="E-mail", text="E-mail")),
+              QuickReplyButton(action=MessageAction(label="Internet", text="Internet")),
+              QuickReplyButton(action=MessageAction(label="Printer & Scanner", text="Printer & Scanner")),
+              QuickReplyButton(action=MessageAction(label="คอมพิวเตอร์", text="การใช้งานเครื่องคอมพิวเตอร์")),
+            ]))
           line_bot_api.reply_message(Reply_token, Reply_object)
-        elif message == "ขอแจ้งปัญหาการใช้งานระบบ Back Office ครับ/ค่ะ" :
+          put_user_session(uid=userID,data={"Session": 1},firebase_app=firebase,db_name="User Session")
+
+        elif match_menu(def_msg="ขอแจ้งปัญหาการใช้งานระบบ Back Office ครับ",user_msg=message) :
           Reply_object = TextSendMessage(text='โปรดระบุระบบ Back Office ที่ท่านใช้งานครับ',quick_reply=QuickReply(items=[
               QuickReplyButton(action=MessageAction(label="ระบบสารบรรณ", text="ระบบสารบรรณ")),
               QuickReplyButton(action=MessageAction(label="ระบบใบลา", text="ระบบใบลา")),
@@ -75,81 +85,92 @@ def event_handle(event):
               QuickReplyButton(action=MessageAction(label="ระบบ DPIS", text="ระบบ DPIS")),
             ]))
           line_bot_api.reply_message(Reply_token, Reply_object)
-        elif message == "กรุณาเรียกเจ้าหน้าที่ IT Support ให้หน่อยครับ/ค่ะ" :
+
+        elif match_menu(def_msg="รบกวนขอใช้งานระบบประชุมออนไลน์ (Zoom) ครับ",user_msg=message) :
+          Reply_object = TextSendMessage(text="ถ้าท่านต้องการใช้งานระบบ Video Conference"+"\n"+"โปรดแจ้งรายละเอียด ดังนี้"+"\n"+"ชื่อการประชุม วันที่ เวลา และต้องการอุปกรณ์สำหรับประชุม Video Conference หรือไม่")
+          line_bot_api.reply_message(Reply_token, Reply_object)
+        
+        elif match_menu(def_msg="กรุณาเรียกเจ้าหน้าที่ให้หน่อยครับ",user_msg=message) :
           line_notify(name=user_name)
           Reply_object = TextSendMessage(text="ได้ดำเนินการเรียกเจ้าหน้าที่แล้ว กรุณารอสักครู่นะครับ")
           line_bot_api.reply_message(Reply_token, Reply_object)
 
-        elif message :
-          Label_message = myPredict(message)
-          if Label_message == "ทักทาย" :
-            Reply_message = "สวัสดีครับ K'" + user_name +"\n" + " IT Support ยินดีให้บริการครับ"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "เสร็จสิ้นและขอบคุณ" :
-            Reply_message = "IT Support ยินดีให้บริการครับ ขอบคุณครับ"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "Video Conference" :
-            Reply_message = "ถ้าท่านต้องการใช้งานระบบ Video Conference"+"\n"+"โปรดแจ้งรายละเอียด ดังนี้"+"\n"+"ชื่อการประชุม วันที่ เวลา และต้องการอุปกรณ์สำหรับประชุม Video Conference หรือไม่"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "ระบบ E-Budget" :
-            Reply_message = "http://budget.mhesi.go.th/"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "ระบบ VPN" :
-            Reply_message = "ท่านสามารถใช้งานผ่าน Web Browser ได้ที่ลิงก์ https://vpn.mhesi.go.th/dana-na/auth/url_3/welcome.cgi"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "ระบบ ERP" :
-            Reply_message = "สามารถใช้งานได้ผ่าน https://erp.mhesi.go.th/"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "Share Drive" :
-            Reply_message = "รบกวนตรวจสอบอินเทอร์เน็ตและ Reboot Computer 1 ครั้งครับ"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "Back Office System" :
-            Reply_object = TextSendMessage(text='โปรดระบุระบบ Back Office ที่ท่านใช้งานครับ',quick_reply=QuickReply(items=[
-              QuickReplyButton(action=MessageAction(label="ระบบสารบรรณ", text="ระบบสารบรรณ")),
-              QuickReplyButton(action=MessageAction(label="ระบบใบลา", text="ระบบใบลา")),
-              QuickReplyButton(action=MessageAction(label="ระบบหนังสือเวียน", text="ระบบหนังสือเวียน")),
-              QuickReplyButton(action=MessageAction(label="ระบบ S-curve", text="ระบบ S-curve")),
-              QuickReplyButton(action=MessageAction(label="ระบบ DPIS", text="ระบบ DPIS")),
-            ]))
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "Email" :
-            Reply_message = "สามารถใช้งานได้ที่ webmail.mhesi.go.th"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "Internet" :
-            Reply_message = "เจ้าหน้าที่ขออนุญาตตรวจสอบสักครู่ครับ ขอบคุณครับ"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "Network Security" :
-            Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่ดำเนินการตรวจสอบให้ครับ"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "เครื่องแม่ข่าย VM & Server" :
-            Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่ดำเนินการตรวจสอบให้ครับ"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "Printer & Scanner" :
-            Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่จะดำเนินการติดตั้งหรือแก้ปัญหาเครื่อง Printer/Scanner ของท่านให้ครับ"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "ปัญหา Computer" :
-            Reply_message = "รับทราบครับ เจ้าหน้าที่ขออนุญาตตรวจสอบสักครู่ครับ"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-          elif Label_message == "ยืมคืน Accessory" :
-            Reply_message = "IT Support มีเครื่องคอมพิวเตอร์ Notebook สำหรับให้บริการชั่วคราวเพียงอย่างเดียวครับ"+"\n"+"สามารถแจ้งเราได้เลยครับ ว่าท่านต้องการกี่เครื่อง ใช้เพื่อวัตถุประสงค์อะไร ระยะเวลาในการยืม"
-            Reply_object = TextSendMessage(text=Reply_message)
-            line_bot_api.reply_message(Reply_token, Reply_object)
-      else:
-          Reply_object = StickerSendMessage(package_id=str(1),sticker_id=str(2))
+        elif match_menu(def_msg="ขอเบอร์หรือช่องทางการติดต่อ IT Support ครับ",user_msg=message) :
+          flex = contact_card(name=user_name,pic=user_pic)
+          flex = json.loads(flex)
+          Reply_object = FlexSendMessage(alt_text='Flex Message',contents=flex)
           line_bot_api.reply_message(Reply_token, Reply_object)
+
+      # elif message :
+      #   Label_message = myPredict(message)
+      #   if Label_message == "ทักทาย" :
+      #     Reply_message = "สวัสดีครับ K'" + user_name +"\n" + " IT Support ยินดีให้บริการครับ"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "เสร็จสิ้นและขอบคุณ" :
+      #     Reply_message = "IT Support ยินดีให้บริการครับ ขอบคุณครับ"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "Video Conference" :
+      #     Reply_message = "ถ้าท่านต้องการใช้งานระบบ Video Conference"+"\n"+"โปรดแจ้งรายละเอียด ดังนี้"+"\n"+"ชื่อการประชุม วันที่ เวลา และต้องการอุปกรณ์สำหรับประชุม Video Conference หรือไม่"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "ระบบ E-Budget" :
+      #     Reply_message = "http://budget.mhesi.go.th/"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "ระบบ VPN" :
+      #     Reply_message = "ท่านสามารถใช้งานผ่าน Web Browser ได้ที่ลิงก์ https://vpn.mhesi.go.th/dana-na/auth/url_3/welcome.cgi"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "ระบบ ERP" :
+      #     Reply_message = "สามารถใช้งานได้ผ่าน https://erp.mhesi.go.th/"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "Share Drive" :
+      #     Reply_message = "รบกวนตรวจสอบอินเทอร์เน็ตและ Reboot Computer 1 ครั้งครับ"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "Back Office System" :
+      #     Reply_object = TextSendMessage(text='โปรดระบุระบบ Back Office ที่ท่านใช้งานครับ',quick_reply=QuickReply(items=[
+      #       QuickReplyButton(action=MessageAction(label="ระบบสารบรรณ", text="ระบบสารบรรณ")),
+      #       QuickReplyButton(action=MessageAction(label="ระบบใบลา", text="ระบบใบลา")),
+      #       QuickReplyButton(action=MessageAction(label="ระบบหนังสือเวียน", text="ระบบหนังสือเวียน")),
+      #       QuickReplyButton(action=MessageAction(label="ระบบ S-curve", text="ระบบ S-curve")),
+      #       QuickReplyButton(action=MessageAction(label="ระบบ DPIS", text="ระบบ DPIS")),
+      #     ]))
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "Email" :
+      #     Reply_message = "สามารถใช้งานได้ที่ webmail.mhesi.go.th"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "Internet" :
+      #     Reply_message = "เจ้าหน้าที่ขออนุญาตตรวจสอบสักครู่ครับ ขอบคุณครับ"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "Network Security" :
+      #     Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่ดำเนินการตรวจสอบให้ครับ"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "เครื่องแม่ข่าย VM & Server" :
+      #     Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่ดำเนินการตรวจสอบให้ครับ"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "Printer & Scanner" :
+      #     Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่จะดำเนินการติดตั้งหรือแก้ปัญหาเครื่อง Printer/Scanner ของท่านให้ครับ"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "ปัญหา Computer" :
+      #     Reply_message = "รับทราบครับ เจ้าหน้าที่ขออนุญาตตรวจสอบสักครู่ครับ"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+      #   elif Label_message == "ยืมคืน Accessory" :
+      #     Reply_message = "IT Support มีเครื่องคอมพิวเตอร์ Notebook สำหรับให้บริการชั่วคราวเพียงอย่างเดียวครับ"+"\n"+"สามารถแจ้งเราได้เลยครับ ว่าท่านต้องการกี่เครื่อง ใช้เพื่อวัตถุประสงค์อะไร ระยะเวลาในการยืม"
+      #     Reply_object = TextSendMessage(text=Reply_message)
+      #     line_bot_api.reply_message(Reply_token, Reply_object)
+    else:
+      Reply_object = StickerSendMessage(package_id=str(1),sticker_id=str(2))
+      line_bot_api.reply_message(Reply_token, Reply_object)
 
 if __name__ == '__main__':
     app.run(debug=True)
