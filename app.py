@@ -63,7 +63,7 @@ def event_handle(event):
     if msgType == "text":
       message = str(event["message"]["text"])
 
-      if user_session == 0:  
+      if user_session == 0 :  
         if match_menu(def_msg="ขอแจ้งปัญหาการใช้งานด้าน IT ครับ",user_msg=message) :
           Reply_object = TextSendMessage(text='โปรดระบุประเภทปัญหาที่ท่านใช้งานครับ',quick_reply=QuickReply(items=[
               QuickReplyButton(action=MessageAction(label="VPN", text="ปัญหาการใช้งาน VPN")),
@@ -75,7 +75,6 @@ def event_handle(event):
             ]))
           line_bot_api.reply_message(Reply_token, Reply_object)
           put_user_session(uid=userID,data={"Session": 1},firebase_app=firebase,db_name="User Session")
-
         elif match_menu(def_msg="ขอแจ้งปัญหาการใช้งานระบบ Back Office ครับ",user_msg=message) :
           Reply_object = TextSendMessage(text='โปรดระบุระบบ Back Office ที่ท่านใช้งานครับ',quick_reply=QuickReply(items=[
               QuickReplyButton(action=MessageAction(label="ระบบสารบรรณ", text="ระบบสารบรรณ")),
@@ -83,23 +82,123 @@ def event_handle(event):
               QuickReplyButton(action=MessageAction(label="ระบบหนังสือเวียน", text="ระบบหนังสือเวียน")),
               QuickReplyButton(action=MessageAction(label="ระบบ S-curve", text="ระบบ S-curve")),
               QuickReplyButton(action=MessageAction(label="ระบบ DPIS", text="ระบบ DPIS")),
+              QuickReplyButton(action=MessageAction(label="ระบบ ERP", text="ระบบ ERP")),
             ]))
           line_bot_api.reply_message(Reply_token, Reply_object)
-
+          put_user_session(uid=userID,data={"Session": 2},firebase_app=firebase,db_name="User Session")
         elif match_menu(def_msg="รบกวนขอใช้งานระบบประชุมออนไลน์ (Zoom) ครับ",user_msg=message) :
-          Reply_object = TextSendMessage(text="ถ้าท่านต้องการใช้งานระบบ Video Conference"+"\n"+"โปรดแจ้งรายละเอียด ดังนี้"+"\n"+"ชื่อการประชุม วันที่ เวลา และต้องการอุปกรณ์สำหรับประชุม Video Conference หรือไม่")
+          Reply_object = TextSendMessage(text="โปรดระบุชื่อการประชุมครับ")
           line_bot_api.reply_message(Reply_token, Reply_object)
-        
+          put_user_session(uid=userID,data={"Session": 3},firebase_app=firebase,db_name="User Session")
         elif match_menu(def_msg="กรุณาเรียกเจ้าหน้าที่ให้หน่อยครับ",user_msg=message) :
           line_notify(name=user_name)
-          Reply_object = TextSendMessage(text="ได้ดำเนินการเรียกเจ้าหน้าที่แล้ว กรุณารอสักครู่นะครับ")
+          Reply_object = TextSendMessage(text="โปรดระบุปัญหาของท่านให้เจ้าหน้าที่ทราบ")
           line_bot_api.reply_message(Reply_token, Reply_object)
-
+          put_user_session(uid=userID,data={"Session": 4},firebase_app=firebase,db_name="User Session")
         elif match_menu(def_msg="ขอเบอร์หรือช่องทางการติดต่อ IT Support ครับ",user_msg=message) :
           flex = contact_card(name=user_name,pic=user_pic)
           flex = json.loads(flex)
           Reply_object = FlexSendMessage(alt_text='Flex Message',contents=flex)
           line_bot_api.reply_message(Reply_token, Reply_object)
+
+      elif user_session == 1 :
+        if match_menu(def_msg="ปัญหาการใช้งาน VPN",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งาน VPN....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        elif match_menu(def_msg="ปัญหาการใช้งาน Share Drive",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งาน Share Drive....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        elif match_menu(def_msg="ปัญหาการใช้งาน E-mail",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งาน E-mail....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        elif match_menu(def_msg="ปัญหาการใช้งาน Internet",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งาน Internet....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        elif match_menu(def_msg="ปัญหาการใช้งาน Printer & Scanner",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งาน Printer & Scanner....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        elif match_menu(def_msg="ปัญหาการใช้งานเครื่องคอมพิวเตอร์ computer",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งานคอมพิวเตอร์....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        else :
+          Reply_object = TextSendMessage(text='ฉันไม่เข้าใจ โปรดระบุประเภทปัญหาที่ท่านใช้งานอีกครั้งครับ',quick_reply=QuickReply(items=[
+              QuickReplyButton(action=MessageAction(label="VPN", text="ปัญหาการใช้งาน VPN")),
+              QuickReplyButton(action=MessageAction(label="Share Drive", text="Share Drive")),
+              QuickReplyButton(action=MessageAction(label="E-mail", text="E-mail")),
+              QuickReplyButton(action=MessageAction(label="Internet", text="Internet")),
+              QuickReplyButton(action=MessageAction(label="Printer & Scanner", text="Printer & Scanner")),
+              QuickReplyButton(action=MessageAction(label="คอมพิวเตอร์", text="การใช้งานเครื่องคอมพิวเตอร์")),
+            ]))
+          line_bot_api.reply_message(Reply_token, Reply_object)
+
+      elif user_session == 2 :
+        if match_menu(def_msg="ระบบสารบรรณ",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งานระบบสารบรรณ....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        elif match_menu(def_msg="ระบบใบลา",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งานระบบใบลา....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        elif match_menu(def_msg="ระบบหนังสือเวียน",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งานระบบหนังสือเวียน....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        elif match_menu(def_msg="S-curve",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งานระบบ S-curve....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        elif match_menu(def_msg="DPIS",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งานระบบ DPIS....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        elif match_menu(def_msg="ERP",user_msg=message) :
+          Reply_object = TextSendMessage(text='การใช้งานระบบ ERP....')
+          line_bot_api.reply_message(Reply_token, Reply_object)
+          put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        else :
+          Reply_object = TextSendMessage(text='ฉันไม่เข้าใจ โปรดระบุระบบสารสนเทศที่ท่านใช้งานอีกครั้งครับ',quick_reply=QuickReply(items=[
+              QuickReplyButton(action=MessageAction(label="ระบบสารบรรณ", text="ระบบสารบรรณ")),
+              QuickReplyButton(action=MessageAction(label="ระบบใบลา", text="ระบบใบลา")),
+              QuickReplyButton(action=MessageAction(label="ระบบหนังสือเวียน", text="ระบบหนังสือเวียน")),
+              QuickReplyButton(action=MessageAction(label="ระบบ S-curve", text="ระบบ S-curve")),
+              QuickReplyButton(action=MessageAction(label="ระบบ DPIS", text="ระบบ DPIS")),
+              QuickReplyButton(action=MessageAction(label="ระบบ ERP", text="ระบบ ERP")),
+            ]))
+          line_bot_api.reply_message(Reply_token, Reply_object)
+
+      elif user_session == 3 :
+        Reply_object = TextSendMessage(text='โปรดระบุวันที่ในการประชุมครับ (เช่น 15/01/2021)')
+        line_bot_api.reply_message(Reply_token, Reply_object)
+        put_user_session(uid=userID,data={"Session": 3.1},firebase_app=firebase,db_name="User Session")
+      elif user_session == 3.1 :
+        Reply_object = TextSendMessage(text='โปรดระบุเวลาการประชุม (เช่น 09:00-15:30)')
+        line_bot_api.reply_message(Reply_token, Reply_object)
+        put_user_session(uid=userID,data={"Session": 3.2},firebase_app=firebase,db_name="User Session")
+      elif user_session == 3.2 :
+        Reply_object = TextSendMessage(text='โปรดระบุสถานที่ประชุม (เช่น ห้องประชุมชั้น5 อาคารพระจอมเกล้า)')
+        line_bot_api.reply_message(Reply_token, Reply_object)
+        put_user_session(uid=userID,data={"Session": 3.3},firebase_app=firebase,db_name="User Session")
+      elif user_session == 3.3 :
+        Reply_object = TextSendMessage(text='โปรดระบุว่าต้องการใช้อุปกรณ์การประชุมหรือไม่ (ต้องการ หรือ ไม่ต้องการ)')
+        line_bot_api.reply_message(Reply_token, Reply_object)
+        put_user_session(uid=userID,data={"Session": 3.4},firebase_app=firebase,db_name="User Session")
+      elif user_session == 3.4 :
+        Reply_object = TextSendMessage(text='ผลลัพธ์จากการขอใช้ zoom')
+        line_bot_api.reply_message(Reply_token, Reply_object)
+        put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+
+      elif user_session == 4 :
+        Reply_object = TextSendMessage(text='ได้ดำเนินการเรียกเจ้าหน้าที่แล้ว กรุณารอสักครู่ครับ')
+        line_bot_api.reply_message(Reply_token, Reply_object)
+        put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+
 
       # elif message :
       #   Label_message = myPredict(message)
