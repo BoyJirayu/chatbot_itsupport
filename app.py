@@ -2,7 +2,7 @@ from flask import Flask, jsonify, render_template, request
 from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,ImageSendMessage,FlexSendMessage, StickerSendMessage, AudioSendMessage, QuickReply, QuickReplyButton, MessageAction
 from linebot.models.template import *
 from linebot import LineBotApi, WebhookHandler
-from use_model import myPredict, lamda_l
+from use_model import myPredict, comma
 from firebase import firebase
 from connect_firebase import *
 from card_function import *

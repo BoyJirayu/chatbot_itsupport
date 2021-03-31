@@ -10,7 +10,7 @@ feature_path = 'feature.pkl'
 classifier_path = 'classifierRFC.pkl'
 model=None
 vectorizer=None
-def lamda_l(text1):
+def comma(text1):
     return text1.split(',')
 
 def myPredict(input_text):
