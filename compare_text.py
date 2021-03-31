@@ -2,7 +2,7 @@ from sklearn.metrics import pairwise
 from nltk.stem import PorterStemmer
 from etl import cleanText,tokenization2
 import pickle
-from use_model import comma
+from use_model import lamda_l
 
 def match_menu(def_msg,user_msg):
     d_msg = change_before_match(def_msg)
