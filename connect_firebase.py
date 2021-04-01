@@ -19,11 +19,14 @@ def get(uid,firebase_app,db_name):
     res = firebase_app.get("/"+db_name,uid)
     return res
 
-# engineer = {'id':1001,'name':'Uncle Engineer'}
-# engineer2 = {'id':1002,'name':'Lung Tu'}
+def put_vcs(uid,data,firebase_app,db_name):
+    res = firebase_app.patch("/"+db_name+"/"+uid,data)
+    return res
 
-# result = messenger.put('/user','1',engineer)
-# result2 = messenger.put('/user','2',engineer2)
+def get_vcs(uid,firebase_app,db_name):
+    res = firebase_app.get("/"+db_name,uid)
+    return res
 
-# print("Engineer 1", result)
-# print("Engineer 2", result2)
+def put_problem_for_emp(uid,data,firebase_app,db_name):
+    res = firebase_app.patch("/"+db_name+"/"+uid,data)
+    return res

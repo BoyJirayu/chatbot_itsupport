@@ -174,27 +174,34 @@ def event_handle(event):
           line_bot_api.reply_message(Reply_token, Reply_object)
 
       elif user_session == 3 :
+        put_vcs(uid=userID,data={"Topic": message},firebase_app=firebase,db_name="Video Conference")
         Reply_object = TextSendMessage(text='โปรดระบุวันที่ในการประชุมครับ (เช่น 15/01/2021)')
         line_bot_api.reply_message(Reply_token, Reply_object)
         put_user_session(uid=userID,data={"Session": 3.1},firebase_app=firebase,db_name="User Session")
       elif user_session == 3.1 :
+        put_vcs(uid=userID,data={"Date": message},firebase_app=firebase,db_name="Video Conference")
         Reply_object = TextSendMessage(text='โปรดระบุเวลาการประชุม (เช่น 09:00-15:30)')
         line_bot_api.reply_message(Reply_token, Reply_object)
         put_user_session(uid=userID,data={"Session": 3.2},firebase_app=firebase,db_name="User Session")
       elif user_session == 3.2 :
+        put_vcs(uid=userID,data={"Time": message},firebase_app=firebase,db_name="Video Conference")
         Reply_object = TextSendMessage(text='โปรดระบุสถานที่ประชุม (เช่น ห้องประชุมชั้น5 อาคารพระจอมเกล้า)')
         line_bot_api.reply_message(Reply_token, Reply_object)
         put_user_session(uid=userID,data={"Session": 3.3},firebase_app=firebase,db_name="User Session")
       elif user_session == 3.3 :
+        put_vcs(uid=userID,data={"Location": message},firebase_app=firebase,db_name="Video Conference")
         Reply_object = TextSendMessage(text='โปรดระบุว่าต้องการใช้อุปกรณ์การประชุมหรือไม่ (ต้องการ หรือ ไม่ต้องการ)')
         line_bot_api.reply_message(Reply_token, Reply_object)
         put_user_session(uid=userID,data={"Session": 3.4},firebase_app=firebase,db_name="User Session")
       elif user_session == 3.4 :
-        Reply_object = TextSendMessage(text='ผลลัพธ์จากการขอใช้ zoom')
+        put_vcs(uid=userID,data={"VCS_Device": message},firebase_app=firebase,db_name="Video Conference")
+        vcs = get(uid=userID,firebase_app=firebase,db_name="Video Conference")
+        Reply_object = TextSendMessage(text='กรุณารอสักครู่ครับ เจ้าหน้าที่กำลังดำเนินการสร้างลิงก์สำหรับการประชุมให้ครับ โดยมีรายละเอียดดังนี้\n\n'+vcs["Topic"]+' '+vcs["Date"]+' '+vcs["Time"]+' '+vcs["Location"]+' '+vcs["VCS_Device"])
         line_bot_api.reply_message(Reply_token, Reply_object)
         put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
 
       elif user_session == 4 :
+        put_problem_for_emp(uid=userID,data={"Problem": message},firebase_app=firebase,db_name="Call IT Support")
         Reply_object = TextSendMessage(text='ได้ดำเนินการเรียกเจ้าหน้าที่แล้ว กรุณารอสักครู่ครับ')
         line_bot_api.reply_message(Reply_token, Reply_object)
         put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
