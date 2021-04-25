@@ -112,7 +112,7 @@ def contact_card(name,pic):
                   },
                   {
                     "type": "text",
-                    "text": "@it-support",
+                    "text": "@273qmwmy",
                     "flex": 5,
                     "color": "#4682B4",
                     "size": "sm"
@@ -138,5 +138,13 @@ def line_notify(name,problem) :
   headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
 
   msg = '\nคุณ'+name+' เรียกเจ้าหน้าที่ IT Support\n\nปัญหา:'+problem
+  r = requests.post(url, headers=headers, data = {'message':msg})
+  print (r.text)
+
+def conference_line_notify(name,topic,date,time,location,vcs_device) :
+  url = 'https://notify-api.line.me/api/notify'
+  token = '2ZQUYSP1cYGQMg2j3aPfHIepEO3PkHO4yiqJkaJaT1w'
+  headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
+  msg = '\nคุณ'+name+' ต้องการใช้งานระบบ Video Conference\n\nโดยมีรายละเอียดดังนี้\nชื่อประชุม: '+topic+'\nวันที่ประชุม: '+date+' เวลา '+time+' น. \nสถานที่: '+location+'\nติดตั้งอุปกรณ์: '+vcs_device
   r = requests.post(url, headers=headers, data = {'message':msg})
   print (r.text)

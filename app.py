@@ -99,6 +99,9 @@ def event_handle(event):
           flex = json.loads(flex)
           Reply_object = FlexSendMessage(alt_text='Flex Message',contents=flex)
           line_bot_api.reply_message(Reply_token, Reply_object)
+        elif match_menu90(def_msg="ระบบ",user_msg=message) :
+          Reply_object = TextSendMessage(text='ฉันไม่เข้าใจ โปรดให้รายละเอียดกับเราอีกครั้งครับ')
+          line_bot_api.reply_message(Reply_token, Reply_object)
         
         elif message :
           Label_message = myPredict(message)
@@ -139,6 +142,7 @@ def event_handle(event):
               QuickReplyButton(action=MessageAction(label="ระบบ E-Budget", text="ระบบ E-Budget")),
             ]))
             line_bot_api.reply_message(Reply_token, Reply_object)
+            put_user_session(uid=userID,data={"Session": 2},firebase_app=firebase,db_name="User Session")
           elif Label_message == "Email" :
             Reply_message = "อีเมลสามารถใช้งานได้ที่ https://webmail.mhesi.go.th \nหากท่านมีปัญหาการใช้งานโปรดกดปุ่มเรียกเจ้าหน้าที่"
             Reply_object = TextSendMessage(text=Reply_message)
@@ -148,7 +152,7 @@ def event_handle(event):
             line_bot_api.reply_message(Reply_token, Reply_object)
             put_user_session(uid=userID,data={"Session": 4},firebase_app=firebase,db_name="User Session")
           elif Label_message == "Network Security" :
-            Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่ดำเนินการตรวจสอบให้ครับ"
+            Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่ดำเนินการตรวจสอบปัญหาของท่านให้ครับ"
             Reply_object = TextSendMessage(text=Reply_message)
             line_bot_api.reply_message(Reply_token, Reply_object)
           elif Label_message == "เครื่องแม่ข่าย VM & Server" :
@@ -178,7 +182,7 @@ def event_handle(event):
           Reply_object = TextSendMessage(text=Reply_message)
           line_bot_api.reply_message(Reply_token, Reply_object)
           put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
-        elif match_menu(def_msg="ปัญหาการใช้งาน E-mail",user_msg=message) :
+        elif match_menu(def_msg="การใช้งานอีเมล E-mail ",user_msg=message) :
           Reply_message = "อีเมลสามารถใช้งานได้ที่ https://webmail.mhesi.go.th \nหากท่านมีปัญหาการใช้งานโปรดกดปุ่มเรียกเจ้าหน้าที่"
           Reply_object = TextSendMessage(text=Reply_message)
           line_bot_api.reply_message(Reply_token, Reply_object)
@@ -220,11 +224,11 @@ def event_handle(event):
           line_bot_api.reply_message(Reply_token, Reply_object)
           put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
         elif match_menu(def_msg="S-curve",user_msg=message) :
-          Reply_object = TextSendMessage(text='การใช้งานระบบ S-curve....')
+          Reply_object = TextSendMessage(text='ท่านสามารถใช้งานระบบ S-curve ได้ที่\nhttp://scurve.mhesi.go.th/ \n\nหากท่านยังคงมีปัญหาการใช้งานระบบ S-curve โปรดกดเมนูเรียกเจ้าหน้าที่ครับ')
           line_bot_api.reply_message(Reply_token, Reply_object)
           put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
         elif match_menu(def_msg="DPIS",user_msg=message) :
-          Reply_object = TextSendMessage(text='การใช้งานระบบ DPIS....')
+          Reply_object = TextSendMessage(text='ท่านสามารถใช้งานระบบ DPIS ได้ที่\nhttp://dpis.mhesi.go.th/ \n\nหากท่านยังคงมีปัญหาการใช้งานระบบ DPIS โปรดกดเมนูเรียกเจ้าหน้าที่ครับ')
           line_bot_api.reply_message(Reply_token, Reply_object)
           put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
         elif match_menu(def_msg="ERP",user_msg=message) :
@@ -270,9 +274,10 @@ def event_handle(event):
       elif user_session == 3.4 :
         put_vcs(uid=userID,data={"VCS_Device": message},firebase_app=firebase,db_name="Video Conference")
         vcs = get(uid=userID,firebase_app=firebase,db_name="Video Conference")
-        Reply_object = TextSendMessage(text='กรุณารอสักครู่ครับ เจ้าหน้าที่กำลังดำเนินการสร้างลิงก์สำหรับการประชุมให้ครับ โดยมีรายละเอียดดังนี้\n\n'+vcs["Topic"]+' '+vcs["Date"]+' '+vcs["Time"]+' '+vcs["Location"]+' '+vcs["VCS_Device"]+'\n\nและท่านสามารถดูวิดีโอการใช้งาน Zoom ได้ดังลิงก์ด้านล่างนี้ครับ\nhttps://iptv.mhesi.go.th/website/video/detail/1134')
+        Reply_object = TextSendMessage(text='กรุณารอสักครู่ครับ เจ้าหน้าที่กำลังดำเนินการสร้างลิงก์สำหรับการประชุมให้ครับ โดยมีรายละเอียดดังนี้\n\nชื่อประชุม: '+vcs["Topic"]+'\nวันที่ประชุม: '+vcs["Date"]+' เวลา '+vcs["Time"]+' น. \nสถานที่:'+vcs["Location"]+'\nติดตั้งอุปกรณ์: '+vcs["VCS_Device"]+'\n\nและท่านสามารถดูวิดีโอการใช้งาน Zoom ได้ดังลิงก์ด้านล่างนี้ครับ\nhttps://iptv.mhesi.go.th/website/video/detail/1134')
         line_bot_api.reply_message(Reply_token, Reply_object)
         put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+        conference_line_notify(name=user_name,topic=vcs["Topic"],date=vcs["Date"],time=vcs["Time"],location=vcs["Location"],vcs_device=vcs["VCS_Device"])
 
       elif user_session == 4 :
         put_problem_for_emp(uid=userID,data={"Problem": message},firebase_app=firebase,db_name="Call IT Support")

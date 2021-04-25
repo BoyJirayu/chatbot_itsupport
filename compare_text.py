@@ -12,6 +12,15 @@ def match_menu(def_msg,user_msg):
     if(result[0][0]>=0.55):
         return True
     else: return False
+
+def match_menu90(def_msg,user_msg):
+    d_msg = change_before_match(def_msg)
+    u_msg = change_before_match(user_msg)
+    result = pairwise.cosine_similarity(d_msg,u_msg,dense_output=True)
+    print(result[0][0])
+    if(result[0][0]>=0.90):
+        return True
+    else: return False
     
 def change_before_match(meg):
     X= [meg]
@@ -23,6 +32,7 @@ def change_before_match(meg):
         # document = document.split()
         document = tokenization2(document,"attacut")
         document = [stemmer.stem(word) for word in document]
+        print(document)
         documents.append(document)
         tokens_list_j = [','.join(tkn) for tkn in documents]
         with open('feature.pkl', 'rb') as handle:
