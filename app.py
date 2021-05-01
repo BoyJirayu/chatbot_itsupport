@@ -68,7 +68,7 @@ def event_handle(event):
           Reply_object = TextSendMessage(text='โปรดระบุประเภทปัญหาที่ท่านใช้งานครับ',quick_reply=QuickReply(items=[
               QuickReplyButton(action=MessageAction(label="VPN", text="ปัญหาการใช้งาน VPN")),
               QuickReplyButton(action=MessageAction(label="Share Drive", text="Share Drive")),
-              QuickReplyButton(action=MessageAction(label="E-mail", text="E-mail")),
+              QuickReplyButton(action=MessageAction(label="Email", text="Email")),
               QuickReplyButton(action=MessageAction(label="Internet", text="Internet")),
               QuickReplyButton(action=MessageAction(label="Printer & Scanner", text="Printer & Scanner")),
               QuickReplyButton(action=MessageAction(label="คอมพิวเตอร์", text="การใช้งานเครื่องคอมพิวเตอร์")),
@@ -80,7 +80,7 @@ def event_handle(event):
               QuickReplyButton(action=MessageAction(label="ระบบสารบรรณ", text="ระบบสารบรรณ")),
               QuickReplyButton(action=MessageAction(label="ระบบใบลา", text="ระบบใบลา")),
               QuickReplyButton(action=MessageAction(label="ระบบหนังสือเวียน", text="ระบบหนังสือเวียน")),
-              QuickReplyButton(action=MessageAction(label="ระบบ S-curve", text="ระบบ S-curve")),
+              QuickReplyButton(action=MessageAction(label="ระบบ Scurve", text="ระบบ Scurve")),
               QuickReplyButton(action=MessageAction(label="ระบบ DPIS", text="ระบบ DPIS")),
               QuickReplyButton(action=MessageAction(label="ระบบ ERP", text="ระบบ ERP")),
             ]))
@@ -144,7 +144,7 @@ def event_handle(event):
             line_bot_api.reply_message(Reply_token, Reply_object)
             put_user_session(uid=userID,data={"Session": 2},firebase_app=firebase,db_name="User Session")
           elif Label_message == "Email" :
-            Reply_message = "อีเมลสามารถใช้งานได้ที่ https://webmail.mhesi.go.th \nหากท่านมีปัญหาการใช้งานโปรดกดปุ่มเรียกเจ้าหน้าที่"
+            Reply_message = "อีเมลสามารถใช้งานได้ที่ \nhttps://webmail.mhesi.go.th \nหากท่านมีปัญหาการใช้งานโปรดกดปุ่มเรียกเจ้าหน้าที่"
             Reply_object = TextSendMessage(text=Reply_message)
             line_bot_api.reply_message(Reply_token, Reply_object)
           elif Label_message == "Internet" :
@@ -155,10 +155,12 @@ def event_handle(event):
             Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่ดำเนินการตรวจสอบปัญหาของท่านให้ครับ"
             Reply_object = TextSendMessage(text=Reply_message)
             line_bot_api.reply_message(Reply_token, Reply_object)
+            line_notify_NetworkSec(name=user_name,problem=problem)
           elif Label_message == "เครื่องแม่ข่าย VM & Server" :
             Reply_message = "รับทราบครับ เดี๋ยวเจ้าหน้าที่ดำเนินการตรวจสอบให้ครับ"
             Reply_object = TextSendMessage(text=Reply_message)
             line_bot_api.reply_message(Reply_token, Reply_object)
+            line_notify_ServerVM(name=user_name,problem=problem)
           elif Label_message == "Printer & Scanner" :
             Reply_object = TextSendMessage(text="โปรดระบุปัญหาการใช้งานเครื่องปริ้นเตอร์และสแกนเนอร์ของท่านให้เจ้าหน้าที่ทราบ")
             line_bot_api.reply_message(Reply_token, Reply_object)
@@ -171,6 +173,7 @@ def event_handle(event):
             Reply_message = "IT Support มีเครื่องคอมพิวเตอร์ Notebook สำหรับให้บริการชั่วคราวเพียงอย่างเดียวครับ"+"\n"+"สามารถแจ้งเราได้เลยครับ ว่าท่านต้องการกี่เครื่อง ใช้เพื่อวัตถุประสงค์อะไร และระยะเวลาในการยืม"
             Reply_object = TextSendMessage(text=Reply_message)
             line_bot_api.reply_message(Reply_token, Reply_object)
+            put_user_session(uid=userID,data={"Session": 5},firebase_app=firebase,db_name="User Session")
 
       elif user_session == 1 :
         if match_menu(def_msg="ปัญหาการใช้งาน VPN",user_msg=message) :
@@ -182,7 +185,7 @@ def event_handle(event):
           Reply_object = TextSendMessage(text=Reply_message)
           line_bot_api.reply_message(Reply_token, Reply_object)
           put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
-        elif match_menu(def_msg="การใช้งานอีเมล E-mail ",user_msg=message) :
+        elif match_menu(def_msg="การใช้งานอีเมล Email ",user_msg=message) :
           Reply_message = "อีเมลสามารถใช้งานได้ที่ https://webmail.mhesi.go.th \nหากท่านมีปัญหาการใช้งานโปรดกดปุ่มเรียกเจ้าหน้าที่"
           Reply_object = TextSendMessage(text=Reply_message)
           line_bot_api.reply_message(Reply_token, Reply_object)
@@ -223,8 +226,8 @@ def event_handle(event):
           Reply_object = TextSendMessage(text='โปรดดูวิดีโอการใช้งานระบบหนังสือเวียนตามลิงก์ด้านล่างครับ\nhttps://iptv.mhesi.go.th/website/video/detail/1140 \n\nหากท่านยังคงมีปัญหา โปรดกดเมนูเรียกเจ้าหน้าที่ครับ')
           line_bot_api.reply_message(Reply_token, Reply_object)
           put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
-        elif match_menu(def_msg="S-curve",user_msg=message) :
-          Reply_object = TextSendMessage(text='ท่านสามารถใช้งานระบบ S-curve ได้ที่\nhttp://scurve.mhesi.go.th/ \n\nหากท่านยังคงมีปัญหาการใช้งานระบบ S-curve โปรดกดเมนูเรียกเจ้าหน้าที่ครับ')
+        elif match_menu(def_msg="Scurve",user_msg=message) :
+          Reply_object = TextSendMessage(text='ท่านสามารถใช้งานระบบ Scurve ได้ที่\nhttp://scurve.mhesi.go.th/ \n\nหากท่านยังคงมีปัญหาการใช้งานระบบ Scurve โปรดกดเมนูเรียกเจ้าหน้าที่ครับ')
           line_bot_api.reply_message(Reply_token, Reply_object)
           put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
         elif match_menu(def_msg="DPIS",user_msg=message) :
@@ -244,7 +247,7 @@ def event_handle(event):
               QuickReplyButton(action=MessageAction(label="ระบบสารบรรณ", text="ระบบสารบรรณ")),
               QuickReplyButton(action=MessageAction(label="ระบบใบลา", text="ระบบใบลา")),
               QuickReplyButton(action=MessageAction(label="ระบบหนังสือเวียน", text="ระบบหนังสือเวียน")),
-              QuickReplyButton(action=MessageAction(label="ระบบ S-curve", text="ระบบ S-curve")),
+              QuickReplyButton(action=MessageAction(label="ระบบ Scurve", text="ระบบ Scurve")),
               QuickReplyButton(action=MessageAction(label="ระบบ DPIS", text="ระบบ DPIS")),
               QuickReplyButton(action=MessageAction(label="ระบบ ERP", text="ระบบ ERP")),
               QuickReplyButton(action=MessageAction(label="ระบบ E-Budget", text="ระบบ E-Budget")),
@@ -287,7 +290,16 @@ def event_handle(event):
         problem = problem["Problem"]
         line_notify(name=user_name,problem=problem)
         put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
-    
+
+      elif user_session == 5 :
+        put_problem_for_emp(uid=userID,data={"Detail": message},firebase_app=firebase,db_name="Need_Accessory")
+        Reply_object = TextSendMessage(text='เจ้าหน้าที่ขอตรวจสอบสักครู่ครับ')
+        line_bot_api.reply_message(Reply_token, Reply_object)
+        detail = get(uid=userID,firebase_app=firebase,db_name="Need_Accessory")
+        detail = detail["Detail"]
+        line_notify_accessory(name=user_name,detail=detail)
+        put_user_session(uid=userID,data={"Session": 0},firebase_app=firebase,db_name="User Session")
+
     else:
       if user_session == 0 :
         Reply_object = StickerSendMessage(package_id=str(1),sticker_id=str(2))

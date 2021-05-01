@@ -148,3 +148,30 @@ def conference_line_notify(name,topic,date,time,location,vcs_device) :
   msg = '\nคุณ'+name+' ต้องการใช้งานระบบ Video Conference\n\nโดยมีรายละเอียดดังนี้\nชื่อประชุม: '+topic+'\nวันที่ประชุม: '+date+' เวลา '+time+' น. \nสถานที่: '+location+'\nติดตั้งอุปกรณ์: '+vcs_device
   r = requests.post(url, headers=headers, data = {'message':msg})
   print (r.text)
+
+def line_notify_NetworkSec(name,problem) :
+  url = 'https://notify-api.line.me/api/notify'
+  token = '2ZQUYSP1cYGQMg2j3aPfHIepEO3PkHO4yiqJkaJaT1w'
+  headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
+
+  msg = '\nคุณ'+name+' แจ้งปัญหา Network Security\n\nปัญหา:'+problem
+  r = requests.post(url, headers=headers, data = {'message':msg})
+  print (r.text)
+
+def line_notify_ServerVM(name,problem) :
+  url = 'https://notify-api.line.me/api/notify'
+  token = '2ZQUYSP1cYGQMg2j3aPfHIepEO3PkHO4yiqJkaJaT1w'
+  headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
+
+  msg = '\nคุณ'+name+' แจ้งปัญหา Server & VM\n\nปัญหา:'+problem
+  r = requests.post(url, headers=headers, data = {'message':msg})
+  print (r.text)
+
+def line_notify_accessory(name,detail) :
+  url = 'https://notify-api.line.me/api/notify'
+  token = '2ZQUYSP1cYGQMg2j3aPfHIepEO3PkHO4yiqJkaJaT1w'
+  headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
+
+  msg = '\nคุณ'+name+' แจ้งขอยืมอุปกรณ์ Accessory\n\nรายละเอียด:'+detail
+  r = requests.post(url, headers=headers, data = {'message':msg})
+  print (r.text)

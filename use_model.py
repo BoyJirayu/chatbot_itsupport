@@ -37,6 +37,6 @@ def myPredict(input_text):
     XX = vectorizer.transform(tokens_list_j).toarray()
     # prediction = model.predict_proba(XX)
     prediction = model.predict(XX)
-    print(prediction)
+    # print(prediction)
     return prediction[0]
     # return {"prediction":prediction[0],"text_token":documents[0]}

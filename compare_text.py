@@ -9,7 +9,7 @@ def match_menu(def_msg,user_msg):
     u_msg = change_before_match(user_msg)
     result = pairwise.cosine_similarity(d_msg,u_msg,dense_output=True)
     print(result[0][0])
-    if(result[0][0]>=0.55):
+    if(result[0][0]>=0.60):
         return True
     else: return False
 
